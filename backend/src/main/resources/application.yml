@@ -1,0 +1,42 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: smart-canteen-backend
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://localhost:27017/smart_canteen}
+      auto-index-creation: true
+  jackson:
+    date-format: yyyy-MM-dd'T'HH:mm:ss.SSSZ
+    time-zone: UTC
+    serialization:
+      write-dates-as-timestamps: false
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
+    expiration-ms: ${JWT_EXPIRATION_MS:86400000} # 24 hours
+  razorpay:
+    key-id: ${RAZORPAY_KEY_ID:rzp_test_college_canteen_dummy_key}
+    key-secret: ${RAZORPAY_KEY_SECRET:rzp_test_secret_demo_12345}
+    currency: INR
+  gemini:
+    api-key: ${GEMINI_API_KEY:}
+    model: gemini-1.5-flash
+  canteen:
+    name: "Apex University Central Canteen"
+    slot-capacity-default: 25
+    slot-duration-minutes: 10
+    avg-prep-time-minutes: 8
+    leave-now-threshold-minutes: 5
+    demo-mode: true
+
+logging:
+  level:
+    root: INFO
+    com.smartcanteen: DEBUG
+    org.springframework.data.mongodb: INFO
