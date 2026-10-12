@@ -37,12 +37,6 @@ export default function Login() {
     }
   };
 
-  // Quick Demo Login helper
-  const handleDemoLogin = (demoEmail, demoPass) => {
-    setEmail(demoEmail);
-    setPassword(demoPass);
-  };
-
   return (
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 flex flex-col justify-center max-w-md mx-auto">
       {/* Brand Header */}
@@ -110,55 +104,6 @@ export default function Login() {
             )}
           </button>
         </form>
-
-        {/* Quick Demo Accounts */}
-        <div className="mt-8 pt-6 border-t border-slate-800">
-          <div className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-3">
-            <Sparkles className="w-3.5 h-3.5 text-orange-400" />
-            <span>1-Click Demo Accounts</span>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
-            <button
-              type="button"
-              onClick={() => handleDemoLogin('customer@canteen.com', 'password123')}
-              className="p-3 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-orange-500/40 text-left transition-colors"
-            >
-              <div className="font-bold text-white flex items-center gap-1.5">
-                <span>🎓</span>
-                Customer
-              </div>
-              <div className="text-[10px] text-slate-400 mt-1 font-mono">customer@canteen.com</div>
-              <div className="text-[9px] text-orange-400 mt-0.5 font-medium">Pre-order food & track</div>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => handleDemoLogin('canteen@canteen.com', 'password123')}
-              className="p-3 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-amber-500/40 text-left transition-colors"
-            >
-              <div className="font-bold text-white flex items-center gap-1.5">
-                <span>🍳</span>
-                Canteen Admin
-              </div>
-              <div className="text-[10px] text-slate-400 mt-1 font-mono">canteen@canteen.com</div>
-              <div className="text-[9px] text-amber-400 mt-0.5 font-medium">Add products & KDS</div>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => handleDemoLogin('superadmin@canteen.com', 'password123')}
-              className="p-3 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 hover:border-rose-500/40 text-left transition-colors"
-            >
-              <div className="font-bold text-white flex items-center gap-1.5">
-                <span>🛡️</span>
-                Super Admin
-              </div>
-              <div className="text-[10px] text-slate-400 mt-1 font-mono">superadmin@canteen.com</div>
-              <div className="text-[9px] text-rose-400 mt-0.5 font-medium">Analytics & users</div>
-            </button>
-          </div>
-        </div>
 
         <div className="mt-6 text-center text-xs text-slate-400">
           Don't have an account?{' '}

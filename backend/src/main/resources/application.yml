@@ -34,7 +34,7 @@ app:
     slot-duration-minutes: 10
     avg-prep-time-minutes: 8
     leave-now-threshold-minutes: 5
-    demo-mode: true
+    demo-mode: ${DEMO_MODE:false}
 
 logging:
   level:

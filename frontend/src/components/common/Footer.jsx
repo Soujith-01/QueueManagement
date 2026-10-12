@@ -42,14 +42,21 @@ export const Footer = () => {
             </ul>
           </div>
 
-          {/* Demo Credentials Helper */}
+          {/* Campus Pickup Guidelines */}
           <div>
-            <h4 className="font-semibold text-white text-xs uppercase tracking-wider mb-3">Demo Accounts</h4>
-            <div className="bg-slate-900/90 rounded-xl p-3 border border-slate-800 text-[11px] space-y-1.5 font-mono">
-              <p><span className="text-orange-400 font-semibold">Student:</span> student@campus.edu / Student@123</p>
-              <p><span className="text-indigo-400 font-semibold">Staff:</span> staff@canteen.edu / Staff@123</p>
-              <p><span className="text-rose-400 font-semibold">Admin:</span> admin@canteen.edu / Admin@123</p>
-              <p><span className="text-emerald-400 font-semibold">Faculty:</span> faculty@campus.edu / Faculty@123</p>
+            <h4 className="font-semibold text-white text-xs uppercase tracking-wider mb-3">Counter Service</h4>
+            <div className="bg-slate-900/90 rounded-xl p-3 border border-slate-800 text-xs space-y-2 text-slate-300">
+              <p className="flex items-center gap-1.5 text-slate-300">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                <span>Counter 2: Dedicated Fast-Track Pickup</span>
+              </p>
+              <p className="flex items-center gap-1.5 text-slate-300">
+                <span className="w-1.5 h-1.5 rounded-full bg-orange-400"></span>
+                <span>Show Token QR code to collect tray</span>
+              </p>
+              <p className="text-[11px] text-slate-500 pt-1 border-t border-slate-800">
+                Contact: canteen-help@campus.edu
+              </p>
             </div>
           </div>
         </div>

@@ -23,7 +23,7 @@ import FoodCard from '../components/customer/FoodCard';
 import { formatCurrency } from '../utils/formatters';
 
 export default function Home() {
-  const { user, isCustomer, isCanteenAdmin, isSuperAdmin, switchDemoRole } = useAuth();
+  const { user, isCustomer, isCanteenAdmin, isSuperAdmin } = useAuth();
   const [popularFoods, setPopularFoods] = useState([]);
   const [queueStatus, setQueueStatus] = useState(null);
   const [crowdPrediction, setCrowdPrediction] = useState(null);
@@ -154,41 +154,6 @@ export default function Home() {
                 </>
               )}
             </div>
-
-            {/* Quick 3-Role Demo Showcase */}
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-2.5 text-xs">
-              <span className="text-slate-400 font-semibold mr-1">Experience by Role:</span>
-              <button
-                onClick={() => switchDemoRole('CUSTOMER')}
-                className={`px-3.5 py-1.5 rounded-xl border transition-all flex items-center gap-1.5 ${
-                  isCustomer
-                    ? 'bg-orange-500/20 text-orange-400 border-orange-500/40 font-bold shadow-md shadow-orange-500/10'
-                    : 'bg-slate-900/80 hover:bg-slate-800 text-slate-300 border-slate-800'
-                }`}
-              >
-                <span>🎓 Customer</span>
-              </button>
-              <button
-                onClick={() => switchDemoRole('CANTEEN_ADMIN')}
-                className={`px-3.5 py-1.5 rounded-xl border transition-all flex items-center gap-1.5 ${
-                  isCanteenAdmin
-                    ? 'bg-amber-500/20 text-amber-400 border-amber-500/40 font-bold shadow-md shadow-amber-500/10'
-                    : 'bg-slate-900/80 hover:bg-slate-800 text-slate-300 border-slate-800'
-                }`}
-              >
-                <span>🍳 Canteen Admin</span>
-              </button>
-              <button
-                onClick={() => switchDemoRole('SUPER_ADMIN')}
-                className={`px-3.5 py-1.5 rounded-xl border transition-all flex items-center gap-1.5 ${
-                  isSuperAdmin
-                    ? 'bg-rose-500/20 text-rose-400 border-rose-500/40 font-bold shadow-md shadow-rose-500/10'
-                    : 'bg-slate-900/80 hover:bg-slate-800 text-slate-300 border-slate-800'
-                }`}
-              >
-                <span>🛡️ Super Admin</span>
-              </button>
-            </div>
           </div>
 
           {/* Real-time Status Card & AI Predictions */}
@@ -197,17 +162,17 @@ export default function Home() {
             <div className="p-6 rounded-3xl bg-slate-900/70 border border-slate-800 backdrop-blur-xl shadow-xl flex flex-col justify-between relative overflow-hidden group hover:border-orange-500/30 transition-all">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Live Kitchen Queue</span>
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
+                <span className={`w-2.5 h-2.5 rounded-full ${queueStatus?.activeOrdersInQueue > 0 ? 'bg-amber-500 animate-ping' : 'bg-emerald-500'}`} />
               </div>
               <div className="mt-4 flex items-baseline gap-2">
                 <span className="text-4xl font-display font-black text-white">
-                  {queueStatus?.activeOrdersInQueue ?? 6}
+                  {queueStatus?.activeOrdersInQueue ?? 0}
                 </span>
                 <span className="text-sm font-medium text-slate-400">orders preparing</span>
               </div>
               <div className="mt-4 pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-300">
-                <span>Avg Wait: <strong className="text-amber-400">{queueStatus?.estimatedWaitTimeMinutes ?? 8} mins</strong></span>
-                <span className="text-emerald-400 font-medium">Counter 2: No Line</span>
+                <span>Avg Wait: <strong className="text-amber-400">{queueStatus?.estimatedWaitTimeMinutes ? `${queueStatus.estimatedWaitTimeMinutes} mins` : 'Minimal / No queue'}</strong></span>
+                <span className="text-emerald-400 font-medium">Counter 2: Active</span>
               </div>
             </div>
 
@@ -218,19 +183,19 @@ export default function Home() {
                   <Sparkles className="w-4 h-4" />
                   <span>AI Rush Forecast</span>
                 </div>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">
-                  {crowdPrediction?.crowdLevel || 'PEAK RUSH'}
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-300 border border-orange-500/30">
+                  {crowdPrediction?.crowdLevel || 'NORMAL'}
                 </span>
               </div>
               <div className="mt-3 text-sm text-slate-200">
                 <p className="font-semibold text-white">
-                  {crowdPrediction?.predictionMessage || 'High crowd expected between 12:45 PM and 1:15 PM.'}
+                  {crowdPrediction?.predictionMessage || 'Pre-order meals early to collect without physical queue wait.'}
                 </p>
               </div>
               <div className="mt-4 pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs">
-                <span className="text-slate-400">Recommended:</span>
+                <span className="text-slate-400">Slot Scheduling:</span>
                 <span className="font-bold text-orange-400 bg-orange-400/10 px-2 py-0.5 rounded">
-                  {crowdPrediction?.recommendedPickupSlot || '12:30–12:40 PM'}
+                  {crowdPrediction?.recommendedPickupSlot || 'Pre-Order Open'}
                 </span>
               </div>
             </div>

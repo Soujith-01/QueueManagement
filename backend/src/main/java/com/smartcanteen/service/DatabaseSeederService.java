@@ -59,7 +59,7 @@ public class DatabaseSeederService implements CommandLineRunner {
         seedFoods();
         seedPickupSlots();
         seedCoupons();
-        seedInitialDemoOrders();
+        cleanupFakeDemoOrders();
         log.info("Database seeding check complete!");
     }
 
@@ -79,7 +79,7 @@ public class DatabaseSeederService implements CommandLineRunner {
                     .crowdThresholdHigh(30)
                     .allowPreorders(true)
                     .aiRecommendationsEnabled(true)
-                    .announcementBanner("🔥 Peak lunch rush expected between 12:45 PM and 01:15 PM. Pre-order now to skip the line!")
+                    .announcementBanner("🔥 Pre-order your meals in advance to collect instantly at Counter 2!")
                     .build();
             settingsRepository.save(settings);
             log.info("Seeded Canteen Settings");
@@ -87,24 +87,10 @@ public class DatabaseSeederService implements CommandLineRunner {
     }
 
     private void seedUsers() {
-        // 3 Primary Distinct Roles
-        createOrUpdateUser("customer@canteen.com", "Rohan Mehta (Customer)", "password123", Role.CUSTOMER, "CUST-1001", "Campus Customer");
-        createOrUpdateUser("canteen@canteen.com", "Chef Suresh (Canteen Admin)", "password123", Role.CANTEEN_ADMIN, "CADM-501", "Canteen Operations & Menu");
-        createOrUpdateUser("superadmin@canteen.com", "Director Verma (Super Admin)", "password123", Role.SUPER_ADMIN, "SADM-001", "Executive Management");
-
-        // Campus Demo Users
-        createOrUpdateUser("admin@canteen.edu", "Dr. Rajesh Sharma (Admin)", "Admin@123", Role.SUPER_ADMIN, "ADM-001", "Canteen Directorate");
-        createOrUpdateUser("admin@canteen.com", "Admin Director", "password123", Role.SUPER_ADMIN, "ADM-002", "Canteen Directorate");
-        
-        createOrUpdateUser("staff@canteen.edu", "Ramesh Kumar (Chef / Staff)", "Staff@123", Role.CANTEEN_ADMIN, "STF-204", "Kitchen Operations");
-        createOrUpdateUser("staff@canteen.com", "Canteen Kitchen Staff", "password123", Role.CANTEEN_ADMIN, "STF-205", "Kitchen Operations");
-        
-        createOrUpdateUser("faculty@campus.edu", "Prof. Ananya Iyer", "Faculty@123", Role.FACULTY, "FAC-CS-104", "Computer Science & Engg");
-        createOrUpdateUser("faculty@canteen.com", "Dr. Vikram Seth (Faculty)", "password123", Role.FACULTY, "FAC-EC-102", "Electronics & Comm");
-        
-        createOrUpdateUser("student@campus.edu", "Rahul Verma (Student)", "Student@123", Role.STUDENT, "STU-2026-881", "Information Technology");
-        createOrUpdateUser("student@canteen.com", "Soujith Goudampally (Student)", "password123", Role.STUDENT, "STU-2026-900", "Computer Science");
-        log.info("Verified all demo accounts for Customer, Canteen Admin, Super Admin, Faculty, Student");
+        // Operational Management Accounts
+        createOrUpdateUser("admin@canteen.edu", "Canteen Administrator", "Admin@123", Role.SUPER_ADMIN, "ADM-001", "Canteen Directorate");
+        createOrUpdateUser("canteen@canteen.com", "Canteen Kitchen Manager", "password123", Role.CANTEEN_ADMIN, "CADM-501", "Canteen Operations & Menu");
+        log.info("Verified management accounts (admin@canteen.edu, canteen@canteen.com)");
     }
 
     private void createOrUpdateUser(String email, String name, String rawPassword, Role role, String universityId, String department) {
@@ -366,101 +352,17 @@ public class DatabaseSeederService implements CommandLineRunner {
         }
     }
 
-    private void seedInitialDemoOrders() {
-        if (orderRepository.count() == 0) {
-            User student = userRepository.findByEmail("student@campus.edu").orElse(null);
-            User faculty = userRepository.findByEmail("faculty@campus.edu").orElse(null);
-            List<Food> foods = foodRepository.findAll();
-            if (student == null || foods.size() < 4) return;
-
-            String today = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
-
-            // Order A001 - PREPARING
-            Order ord1 = Order.builder()
-                    .orderNumber("ORD-" + today.replace("-", "") + "-1001")
-                    .userId(student.getId())
-                    .userName(student.getName())
-                    .userEmail(student.getEmail())
-                    .userRole(Role.STUDENT)
-                    .items(List.of(OrderItem.builder()
-                            .foodId(foods.get(0).getId())
-                            .foodName(foods.get(0).getName())
-                            .price(foods.get(0).getPrice())
-                            .quantity(1)
-                            .isVeg(true)
-                            .subtotal(80.0)
-                            .build()))
-                    .subtotal(80.0)
-                    .finalAmount(80.0)
-                    .tokenNumber("A001")
-                    .qrCodeIdentifier("SQC-DEMO-ORD-A001")
-                    .pickupSlotTime("12:30 PM - 12:40 PM")
-                    .pickupSlotDate(today)
-                    .status(OrderStatus.PREPARING)
-                    .paymentStatus(PaymentStatus.SUCCESS)
-                    .queuePosition(1)
-                    .estimatedReadyTime(Instant.now().plus(4, ChronoUnit.MINUTES))
-                    .createdAt(Instant.now().minus(5, ChronoUnit.MINUTES))
-                    .build();
-
-            // Order A002 - READY
-            Order ord2 = Order.builder()
-                    .orderNumber("ORD-" + today.replace("-", "") + "-1002")
-                    .userId(faculty != null ? faculty.getId() : student.getId())
-                    .userName(faculty != null ? faculty.getName() : "Faculty User")
-                    .userEmail(faculty != null ? faculty.getEmail() : "faculty@campus.edu")
-                    .userRole(Role.FACULTY)
-                    .items(List.of(OrderItem.builder()
-                            .foodId(foods.get(3).getId())
-                            .foodName(foods.get(3).getName())
-                            .price(foods.get(3).getPrice())
-                            .quantity(2)
-                            .isVeg(true)
-                            .subtotal(140.0)
-                            .build()))
-                    .subtotal(140.0)
-                    .finalAmount(140.0)
-                    .tokenNumber("A002")
-                    .qrCodeIdentifier("SQC-DEMO-ORD-A002")
-                    .pickupSlotTime("12:40 PM - 12:50 PM")
-                    .pickupSlotDate(today)
-                    .status(OrderStatus.READY)
-                    .paymentStatus(PaymentStatus.SUCCESS)
-                    .queuePosition(0)
-                    .readyAt(Instant.now().minus(2, ChronoUnit.MINUTES))
-                    .createdAt(Instant.now().minus(12, ChronoUnit.MINUTES))
-                    .build();
-
-            // Order A003 - ACCEPTED
-            Order ord3 = Order.builder()
-                    .orderNumber("ORD-" + today.replace("-", "") + "-1003")
-                    .userId(student.getId())
-                    .userName(student.getName())
-                    .userEmail(student.getEmail())
-                    .userRole(Role.STUDENT)
-                    .items(List.of(OrderItem.builder()
-                            .foodId(foods.get(1).getId())
-                            .foodName(foods.get(1).getName())
-                            .price(foods.get(1).getPrice())
-                            .quantity(1)
-                            .isVeg(false)
-                            .subtotal(120.0)
-                            .build()))
-                    .subtotal(120.0)
-                    .finalAmount(120.0)
-                    .tokenNumber("A003")
-                    .qrCodeIdentifier("SQC-DEMO-ORD-A003")
-                    .pickupSlotTime("12:50 PM - 01:00 PM")
-                    .pickupSlotDate(today)
-                    .status(OrderStatus.ACCEPTED)
-                    .paymentStatus(PaymentStatus.SUCCESS)
-                    .queuePosition(2)
-                    .estimatedReadyTime(Instant.now().plus(8, ChronoUnit.MINUTES))
-                    .createdAt(Instant.now().minus(1, ChronoUnit.MINUTES))
-                    .build();
-
-            orderRepository.saveAll(Arrays.asList(ord1, ord2, ord3));
-            log.info("Seeded initial active demo orders");
+    private void cleanupFakeDemoOrders() {
+        try {
+            List<Order> demoOrders = orderRepository.findAll().stream()
+                    .filter(o -> o.getQrCodeIdentifier() != null && o.getQrCodeIdentifier().contains("DEMO"))
+                    .toList();
+            if (!demoOrders.isEmpty()) {
+                orderRepository.deleteAll(demoOrders);
+                log.info("Cleaned up {} fake demo orders from database", demoOrders.size());
+            }
+        } catch (Exception e) {
+            log.warn("Failed to cleanup demo orders: {}", e.getMessage());
         }
     }
 }

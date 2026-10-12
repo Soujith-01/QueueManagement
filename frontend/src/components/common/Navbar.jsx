@@ -30,7 +30,7 @@ import { useNotifications } from '../../context/NotificationContext';
 import { useSocket } from '../../context/SocketContext';
 
 export const Navbar = () => {
-  const { user, logout, isCustomer, isCanteenAdmin, isSuperAdmin, switchDemoRole } = useAuth();
+  const { user, logout, isCustomer, isCanteenAdmin, isSuperAdmin } = useAuth();
   const { totalItems, setIsDrawerOpen } = useCart();
   const { unreadCount, notifications, markAsRead } = useNotifications();
   const { connected } = useSocket();
@@ -40,24 +40,8 @@ export const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [notifDropdownOpen, setNotifDropdownOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
-  const [roleSwitcherOpen, setRoleSwitcherOpen] = useState(false);
-  const [switchingRole, setSwitchingRole] = useState(false);
 
   const isActive = (path) => location.pathname === path;
-
-  const handleRoleSwitch = async (roleName, targetPath) => {
-    try {
-      setSwitchingRole(true);
-      setRoleSwitcherOpen(false);
-      setMobileMenuOpen(false);
-      await switchDemoRole(roleName);
-      navigate(targetPath);
-    } catch (err) {
-      console.error('Failed to switch role', err);
-    } finally {
-      setSwitchingRole(false);
-    }
-  };
 
   // Compute active role badge info
   const getRoleBadge = () => {
@@ -282,91 +266,13 @@ export const Navbar = () => {
               <span className="text-[11px] text-slate-400">{connected ? 'Live Sync' : 'Connecting'}</span>
             </div>
 
-            {/* DEMO ROLE SWITCHER (Instant 1-Click Role Switcher) */}
-            <div className="relative">
-              <button
-                onClick={() => setRoleSwitcherOpen(!roleSwitcherOpen)}
-                disabled={switchingRole}
-                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-xs font-bold text-slate-200 transition-all shadow-sm"
-                title="Switch active role interface"
-              >
+            {/* Active User Role Badge */}
+            {user && (
+              <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs font-semibold text-slate-200">
                 <span>{currentBadge.icon}</span>
-                <span className="hidden sm:inline font-semibold">{currentBadge.label}</span>
-                <ChevronDown className="w-3 h-3 text-slate-400" />
-              </button>
-
-              {roleSwitcherOpen && (
-                <div className="absolute right-0 mt-2 w-72 rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
-                  <div className="px-3 py-2 border-b border-slate-800 mb-1">
-                    <span className="text-xs font-bold text-white uppercase tracking-wider block">
-                      Switch Role Interface
-                    </span>
-                    <span className="text-[10px] text-slate-400">
-                      Explore the tailored interface for each role
-                    </span>
-                  </div>
-
-                  <div className="space-y-1">
-                    {/* Option 1: Customer */}
-                    <button
-                      onClick={() => handleRoleSwitch('CUSTOMER', '/menu')}
-                      className={`w-full flex items-start gap-2.5 p-2 rounded-xl text-left transition-all ${
-                        isCustomer ? 'bg-orange-500/10 border border-orange-500/30' : 'hover:bg-slate-800/80'
-                      }`}
-                    >
-                      <div className="w-7 h-7 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center shrink-0 text-sm">
-                        🎓
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-white">Customer</span>
-                          {isCustomer && <span className="text-[10px] text-orange-400 font-bold">Active</span>}
-                        </div>
-                        <p className="text-[10px] text-slate-400 truncate">Browse menu, pre-order & QR token</p>
-                      </div>
-                    </button>
-
-                    {/* Option 2: Canteen Admin */}
-                    <button
-                      onClick={() => handleRoleSwitch('CANTEEN_ADMIN', '/canteen-admin')}
-                      className={`w-full flex items-start gap-2.5 p-2 rounded-xl text-left transition-all ${
-                        isCanteenAdmin ? 'bg-amber-500/10 border border-amber-500/30' : 'hover:bg-slate-800/80'
-                      }`}
-                    >
-                      <div className="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 text-sm">
-                        🍳
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-white">Canteen Admin</span>
-                          {isCanteenAdmin && <span className="text-[10px] text-amber-400 font-bold">Active</span>}
-                        </div>
-                        <p className="text-[10px] text-slate-400 truncate">Add products, stock adjuster & KDS</p>
-                      </div>
-                    </button>
-
-                    {/* Option 3: Super Admin */}
-                    <button
-                      onClick={() => handleRoleSwitch('SUPER_ADMIN', '/admin')}
-                      className={`w-full flex items-start gap-2.5 p-2 rounded-xl text-left transition-all ${
-                        isSuperAdmin ? 'bg-rose-500/10 border border-rose-500/30' : 'hover:bg-slate-800/80'
-                      }`}
-                    >
-                      <div className="w-7 h-7 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0 text-sm">
-                        🛡️
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-white">Super Admin</span>
-                          {isSuperAdmin && <span className="text-[10px] text-rose-400 font-bold">Active</span>}
-                        </div>
-                        <p className="text-[10px] text-slate-400 truncate">KPI analytics, users, settings & slots</p>
-                      </div>
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
+                <span className="hidden sm:inline">{currentBadge.label}</span>
+              </div>
+            )}
 
             {/* Notification Bell */}
             <div className="relative">

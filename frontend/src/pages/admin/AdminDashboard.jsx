@@ -21,13 +21,11 @@ import {
 } from 'lucide-react';
 import adminService from '../../services/adminService';
 import { formatCurrency } from '../../utils/formatters';
-import DemoSimulatorModal from '../../components/admin/DemoSimulatorModal';
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState(null);
   const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [showSimulator, setShowSimulator] = useState(false);
 
   const fetchDashboardData = async () => {
     try {
@@ -56,38 +54,13 @@ export default function AdminDashboard() {
     fetchDashboardData();
   }, []);
 
-  // Mock data fallbacks for charts if empty
-  const ordersByHourData = analytics?.ordersByHour || [
-    { hour: '11:00 AM', orders: 4 },
-    { hour: '11:30 AM', orders: 8 },
-    { hour: '12:00 PM', orders: 22 },
-    { hour: '12:30 PM', orders: 38 },
-    { hour: '1:00 PM', orders: 45 },
-    { hour: '1:30 PM', orders: 28 },
-    { hour: '2:00 PM', orders: 12 },
-  ];
-
-  const revenueByDayData = analytics?.revenueByDay || [
-    { day: 'Mon', revenue: 4200 },
-    { day: 'Tue', revenue: 5100 },
-    { day: 'Wed', revenue: 4800 },
-    { day: 'Thu', revenue: 6400 },
-    { day: 'Fri', revenue: 7200 },
-    { day: 'Sat', revenue: 3100 },
-  ];
-
+  const ordersByHourData = analytics?.ordersByHour || [];
+  const revenueByDayData = analytics?.revenueByDay || [];
   const roleDistributionData = [
-    { name: 'Student Orders', value: stats?.studentOrdersCount ?? 42, color: '#f97316' },
-    { name: 'Faculty Orders', value: stats?.facultyOrdersCount ?? 14, color: '#a855f7' },
+    { name: 'Student Orders', value: stats?.studentOrdersCount ?? 0, color: '#f97316' },
+    { name: 'Faculty Orders', value: stats?.facultyOrdersCount ?? 0, color: '#a855f7' },
   ];
-
-  const popularFoodsData = analytics?.popularFoods || [
-    { name: 'Veg Biryani', orders: 54 },
-    { name: 'Chicken Biryani', orders: 48 },
-    { name: 'Samosa (2 pcs)', orders: 36 },
-    { name: 'Paneer Roll', orders: 29 },
-    { name: 'Thums Up', orders: 24 },
-  ];
+  const popularFoodsData = analytics?.popularFoods || [];
 
   return (
     <div className="min-h-screen pb-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
@@ -104,19 +77,12 @@ export default function AdminDashboard() {
         {/* Action buttons */}
         <div className="flex flex-wrap items-center gap-3">
           <button
-            onClick={() => setShowSimulator(true)}
-            className="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold text-xs shadow-lg shadow-orange-500/20 active:scale-95 transition-all flex items-center gap-2"
-          >
-            <Play className="w-4 h-4" />
-            <span>Launch Demo Simulator</span>
-          </button>
-
-          <button
             onClick={fetchDashboardData}
-            className="p-2.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 transition-colors"
+            className="p-2.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white border border-slate-800 transition-colors flex items-center gap-2 text-xs font-semibold px-3.5"
             title="Refresh analytics"
           >
             <RefreshCw className="w-4 h-4" />
+            <span>Refresh Data</span>
           </button>
         </div>
       </div>
@@ -161,9 +127,9 @@ export default function AdminDashboard() {
             <IndianRupee className="w-4 h-4 text-emerald-400" />
           </div>
           <div className="text-2xl sm:text-3xl font-display font-black text-white mt-2">
-            {formatCurrency(stats?.todayRevenue ?? 12480)}
+            {formatCurrency(stats?.todayRevenue ?? 0)}
           </div>
-          <p className="text-[11px] text-emerald-400 mt-1 font-semibold">+18.4% vs last week</p>
+          <p className="text-[11px] text-emerald-400 mt-1 font-semibold">Live revenue from verified orders</p>
         </div>
 
         <div className="p-5 rounded-3xl bg-slate-900/80 border border-slate-800 backdrop-blur-md">
@@ -172,9 +138,9 @@ export default function AdminDashboard() {
             <ShoppingBag className="w-4 h-4 text-orange-400" />
           </div>
           <div className="text-2xl sm:text-3xl font-display font-black text-white mt-2">
-            {stats?.todayOrdersCount ?? 68}
+            {stats?.todayOrdersCount ?? 0}
           </div>
-          <p className="text-[11px] text-slate-500 mt-1">{stats?.completedOrdersCount ?? 56} picked up at Counter 2</p>
+          <p className="text-[11px] text-slate-500 mt-1">{stats?.completedOrdersCount ?? 0} collected at Counter 2</p>
         </div>
 
         <div className="p-5 rounded-3xl bg-slate-900/80 border border-slate-800 backdrop-blur-md">
@@ -183,9 +149,9 @@ export default function AdminDashboard() {
             <Clock className="w-4 h-4 text-amber-400" />
           </div>
           <div className="text-2xl sm:text-3xl font-display font-black text-white mt-2">
-            {stats?.averagePreparationTimeMinutes ?? 8.5} <span className="text-sm font-normal text-slate-400">mins</span>
+            {stats?.averagePreparationTimeMinutes ? `${stats.averagePreparationTimeMinutes}` : '8'} <span className="text-sm font-normal text-slate-400">mins</span>
           </div>
-          <p className="text-[11px] text-amber-400 mt-1">Faster by 4.2 mins with slots</p>
+          <p className="text-[11px] text-amber-400 mt-1">Target prep turnaround</p>
         </div>
 
         <div className="p-5 rounded-3xl bg-slate-900/80 border border-slate-800 backdrop-blur-md">
@@ -194,9 +160,9 @@ export default function AdminDashboard() {
             <Flame className="w-4 h-4 text-rose-400" />
           </div>
           <div className="text-2xl sm:text-3xl font-display font-black text-white mt-2">
-            Low / Balanced
+            {(stats?.todayOrdersCount ?? 0) > 20 ? 'Peak' : 'Normal'}
           </div>
-          <p className="text-[11px] text-slate-500 mt-1">Slot load smoothly spread</p>
+          <p className="text-[11px] text-slate-500 mt-1">Live order throughput</p>
         </div>
       </div>
 
@@ -207,22 +173,29 @@ export default function AdminDashboard() {
           <h3 className="text-base font-bold text-white mb-1">Peak Lunch Rush & Order Volume</h3>
           <p className="text-xs text-slate-400 mb-6">Hourly order distribution across lunch break</p>
           <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={ordersByHourData}>
-                <defs>
-                  <linearGradient id="orderGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#f97316" stopOpacity={0.4}/>
-                    <stop offset="95%" stopColor="#f97316" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <XAxis dataKey="hour" stroke="#64748b" fontSize={11} />
-                <YAxis stroke="#64748b" fontSize={11} />
-                <Tooltip
-                  contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', fontSize: '12px' }}
-                />
-                <Area type="monotone" dataKey="orders" stroke="#f97316" strokeWidth={3} fillOpacity={1} fill="url(#orderGrad)" />
-              </AreaChart>
-            </ResponsiveContainer>
+            {ordersByHourData.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={ordersByHourData}>
+                  <defs>
+                    <linearGradient id="orderGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#f97316" stopOpacity={0.4}/>
+                      <stop offset="95%" stopColor="#f97316" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <XAxis dataKey="hour" stroke="#64748b" fontSize={11} />
+                  <YAxis stroke="#64748b" fontSize={11} />
+                  <Tooltip
+                    contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', fontSize: '12px' }}
+                  />
+                  <Area type="monotone" dataKey="orders" stroke="#f97316" strokeWidth={3} fillOpacity={1} fill="url(#orderGrad)" />
+                </AreaChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full flex flex-col items-center justify-center text-xs text-slate-500">
+                <Clock className="w-8 h-8 text-slate-700 mb-2" />
+                <span>Hourly order timeline will appear here as orders are placed</span>
+              </div>
+            )}
           </div>
         </div>
 
@@ -231,35 +204,49 @@ export default function AdminDashboard() {
           <h3 className="text-base font-bold text-white mb-1">Weekly Revenue Performance (₹)</h3>
           <p className="text-xs text-slate-400 mb-6">Daily sales collections through online payments</p>
           <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={revenueByDayData}>
-                <XAxis dataKey="day" stroke="#64748b" fontSize={11} />
-                <YAxis stroke="#64748b" fontSize={11} />
-                <Tooltip
-                  formatter={(val) => [`₹${val}`, 'Revenue']}
-                  contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', fontSize: '12px' }}
-                />
-                <Bar dataKey="revenue" fill="#10b981" radius={[8, 8, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+            {revenueByDayData.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={revenueByDayData}>
+                  <XAxis dataKey="day" stroke="#64748b" fontSize={11} />
+                  <YAxis stroke="#64748b" fontSize={11} />
+                  <Tooltip
+                    formatter={(val) => [`₹${val}`, 'Revenue']}
+                    contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', fontSize: '12px' }}
+                  />
+                  <Bar dataKey="revenue" fill="#10b981" radius={[8, 8, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full flex flex-col items-center justify-center text-xs text-slate-500">
+                <IndianRupee className="w-8 h-8 text-slate-700 mb-2" />
+                <span>Weekly sales trend will build as payments process</span>
+              </div>
+            )}
           </div>
         </div>
 
         {/* Chart 3: Most Popular Foods */}
         <div className="p-6 rounded-3xl bg-slate-900/80 border border-slate-800 backdrop-blur-md">
-          <h3 className="text-base font-bold text-white mb-1">Top 5 Campus Favorites</h3>
-          <p className="text-xs text-slate-400 mb-6">Most ordered items this week</p>
+          <h3 className="text-base font-bold text-white mb-1">Top Campus Favorites</h3>
+          <p className="text-xs text-slate-400 mb-6">Most ordered items</p>
           <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={popularFoodsData} layout="vertical">
-                <XAxis type="number" stroke="#64748b" fontSize={11} />
-                <YAxis dataKey="name" type="category" stroke="#64748b" fontSize={11} width={110} />
-                <Tooltip
-                  contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', fontSize: '12px' }}
-                />
-                <Bar dataKey="orders" fill="#f59e0b" radius={[0, 8, 8, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+            {popularFoodsData.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={popularFoodsData} layout="vertical">
+                  <XAxis type="number" stroke="#64748b" fontSize={11} />
+                  <YAxis dataKey="name" type="category" stroke="#64748b" fontSize={11} width={110} />
+                  <Tooltip
+                    contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', fontSize: '12px' }}
+                  />
+                  <Bar dataKey="orders" fill="#f59e0b" radius={[0, 8, 8, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full flex flex-col items-center justify-center text-xs text-slate-500">
+                <Utensils className="w-8 h-8 text-slate-700 mb-2" />
+                <span>Bestselling items will rank here based on order demand</span>
+              </div>
+            )}
           </div>
         </div>
 
@@ -270,40 +257,40 @@ export default function AdminDashboard() {
             <p className="text-xs text-slate-400 mb-4">Student vs Faculty lunch ordering proportion</p>
           </div>
           <div className="h-56">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={roleDistributionData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={50}
-                  outerRadius={75}
-                  paddingAngle={5}
-                  dataKey="value"
-                >
-                  {roleDistributionData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip
-                  contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', fontSize: '12px' }}
-                />
-                <Legend verticalAlign="bottom" wrapperStyle={{ fontSize: '12px', color: '#94a3b8' }} />
-              </PieChart>
-            </ResponsiveContainer>
+            {(roleDistributionData.some((d) => d.value > 0)) ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={roleDistributionData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={50}
+                    outerRadius={75}
+                    paddingAngle={5}
+                    dataKey="value"
+                  >
+                    {roleDistributionData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', fontSize: '12px' }}
+                  />
+                  <Legend verticalAlign="bottom" wrapperStyle={{ fontSize: '12px', color: '#94a3b8' }} />
+                </PieChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="h-full flex flex-col items-center justify-center text-xs text-slate-500">
+                <Users className="w-8 h-8 text-slate-700 mb-2" />
+                <span>Role breakdown will appear after first orders</span>
+              </div>
+            )}
           </div>
           <div className="text-xs text-center text-slate-400 pt-2 border-t border-slate-800/80">
-            Separate faculty tracking enables prioritized express prep during short 30m break.
+            Real-time breakdown between registered student and faculty orders.
           </div>
         </div>
       </div>
-
-      {/* Demo Simulator Modal */}
-      <DemoSimulatorModal
-        isOpen={showSimulator}
-        onClose={() => setShowSimulator(false)}
-        onRefresh={fetchDashboardData}
-      />
     </div>
   );
 }
