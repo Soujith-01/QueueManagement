@@ -22,10 +22,12 @@ export default function AdminFoods() {
       ]);
 
       if (foodsRes.status === 'fulfilled') {
-        setFoods(foodsRes.value.data || []);
+        const val = foodsRes.value;
+        setFoods(Array.isArray(val) ? val : (val?.data || []));
       }
       if (categoriesRes.status === 'fulfilled') {
-        setCategories(categoriesRes.value.data || []);
+        const val = categoriesRes.value;
+        setCategories(Array.isArray(val) ? val : (val?.data || []));
       }
     } catch (err) {
       console.error('Failed to load foods', err);
@@ -48,10 +50,11 @@ export default function AdminFoods() {
     }
   };
 
-  const filteredFoods = foods.filter((f) =>
-    f.name?.toLowerCase().includes(search.toLowerCase()) ||
-    f.category?.name?.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredFoods = foods.filter((f) => {
+    const catName = typeof f.category === 'string' ? f.category : (f.category?.name || '');
+    return f.name?.toLowerCase().includes(search.toLowerCase()) ||
+      catName.toLowerCase().includes(search.toLowerCase());
+  });
 
   return (
     <div className="min-h-screen pb-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">

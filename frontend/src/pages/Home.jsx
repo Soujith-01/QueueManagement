@@ -40,7 +40,8 @@ export default function Home() {
         ]);
 
         if (foodsRes.status === 'fulfilled') {
-          const foods = foodsRes.value.data || [];
+          const val = foodsRes.value;
+          const foods = Array.isArray(val) ? val : (val?.data || []);
           // Get top 4 rated / available items
           setPopularFoods(foods.filter(f => f.isAvailable).slice(0, 4));
         }

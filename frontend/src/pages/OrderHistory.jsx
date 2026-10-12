@@ -21,7 +21,7 @@ export default function OrderHistory() {
       setLoading(true);
       setError('');
       const res = await orderService.getUserOrders();
-      setOrders(res.data || []);
+      setOrders(Array.isArray(res) ? res : (res?.data || []));
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to load order history');
     } finally {

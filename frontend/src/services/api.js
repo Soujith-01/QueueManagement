@@ -25,7 +25,13 @@ api.interceptors.response.use(
   (response) => {
     const body = response.data;
     if (body && typeof body === 'object' && 'data' in body && body.data !== null && body.data !== undefined) {
-      if (typeof body.data === 'object') {
+      if (Array.isArray(body.data)) {
+        try {
+          body.data.data = body.data;
+        } catch (e) {
+          // Ignore
+        }
+      } else if (typeof body.data === 'object') {
         try {
           if (!('data' in body.data)) {
             Object.defineProperty(body.data, 'data', {
@@ -51,7 +57,9 @@ api.interceptors.response.use(
       }
     }
     const message = error.response?.data?.message || error.message || 'Something went wrong';
-    return Promise.reject(new Error(message));
+    const err = new Error(message);
+    err.response = error.response;
+    return Promise.reject(err);
   }
 );
 

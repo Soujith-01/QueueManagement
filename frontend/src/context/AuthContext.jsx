@@ -28,8 +28,12 @@ export const AuthProvider = ({ children }) => {
     verifyUser();
   }, []);
 
-  const login = async (credentials) => {
-    const data = await authService.login(credentials);
+  const login = async (credentials, maybePassword) => {
+    let payload = credentials;
+    if (typeof credentials === 'string') {
+      payload = { email: credentials, password: maybePassword };
+    }
+    const data = await authService.login(payload);
     setUser(data);
     return data;
   };

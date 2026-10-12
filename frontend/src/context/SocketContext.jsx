@@ -113,10 +113,27 @@ export const SocketProvider = ({ children }) => {
     });
   };
 
+  const subscribe = (topic, callback) => {
+    if (!stompClientRef.current || !connected) return () => {};
+    const sub = stompClientRef.current.subscribe(topic, (message) => {
+      try {
+        const data = JSON.parse(message.body);
+        callback(data);
+      } catch (e) {
+        callback(message.body);
+      }
+    });
+    return () => {
+      try { sub.unsubscribe(); } catch (e) {}
+    };
+  };
+
   return (
     <SocketContext.Provider
       value={{
         connected,
+        isConnected: connected,
+        subscribe,
         lastQueueUpdate,
         lastKitchenUpdate,
         lastInventoryUpdate,

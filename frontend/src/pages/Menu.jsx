@@ -24,10 +24,12 @@ export default function Menu() {
         ]);
 
         if (foodsRes.status === 'fulfilled') {
-          setFoods(foodsRes.value.data || []);
+          const val = foodsRes.value;
+          setFoods(Array.isArray(val) ? val : (val?.data || []));
         }
         if (categoriesRes.status === 'fulfilled') {
-          setCategories(categoriesRes.value.data || []);
+          const val = categoriesRes.value;
+          setCategories(Array.isArray(val) ? val : (val?.data || []));
         }
       } catch (err) {
         console.error('Failed to load menu', err);

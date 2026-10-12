@@ -38,10 +38,12 @@ export default function AdminDashboard() {
       ]);
 
       if (statsRes.status === 'fulfilled') {
-        setStats(statsRes.value.data);
+        const val = statsRes.value;
+        setStats(val?.totalOrders !== undefined ? val : (val?.data || val));
       }
       if (analyticsRes.status === 'fulfilled') {
-        setAnalytics(analyticsRes.value.data);
+        const val = analyticsRes.value;
+        setAnalytics(val?.ordersByHour !== undefined ? val : (val?.data || val));
       }
     } catch (err) {
       console.error('Failed to load admin analytics', err);

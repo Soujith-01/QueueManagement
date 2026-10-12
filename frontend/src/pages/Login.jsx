@@ -21,7 +21,7 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const user = await login(email, password);
+      const user = await login({ email, password });
       // Route based on 3 distinct roles
       if (user.role === 'SUPER_ADMIN' || user.role === 'ADMIN') {
         navigate('/admin');
@@ -31,7 +31,7 @@ export default function Login() {
         navigate(from === '/login' ? '/menu' : from);
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Invalid email or password');
+      setError(err.response?.data?.message || err.message || 'Invalid email or password');
     } finally {
       setLoading(false);
     }
