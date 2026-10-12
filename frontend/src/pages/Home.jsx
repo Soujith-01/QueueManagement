@@ -347,31 +347,43 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Visual Card / Mock Preview */}
+            {/* Fast-Track Counter Feature Card */}
             <div className="p-8 rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl relative overflow-hidden">
               <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
               
               <div className="flex items-center justify-between border-b border-slate-800 pb-4">
                 <div className="flex items-center gap-2.5">
-                  <span className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="text-xs font-mono font-bold text-slate-300">LIVE TOKEN: #A014</span>
+                  <span className="w-3 h-3 rounded-full bg-emerald-500" />
+                  <span className="text-xs font-bold text-slate-300 uppercase tracking-wider">Fast-Track Counter 2</span>
                 </div>
                 <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                  FOOD READY
+                  EXPRESS PICKUP
                 </span>
               </div>
 
               <div className="mt-6 text-center">
-                <p className="text-xs text-slate-400 uppercase tracking-wider">Pickup at Counter 2</p>
-                <div className="text-3xl font-display font-black text-white mt-1">Hyderabadi Veg Biryani</div>
-                <div className="mt-4 inline-block p-4 bg-white rounded-2xl shadow-lg">
-                  <QrCode className="w-32 h-32 text-slate-950 mx-auto" />
+                <div className="w-16 h-16 rounded-2xl bg-orange-500/10 border border-orange-500/20 text-orange-400 flex items-center justify-center mx-auto mb-4">
+                  <QrCode className="w-8 h-8" />
                 </div>
-                <p className="mt-4 text-xs font-mono text-slate-400">Slot: 12:40 PM - 12:50 PM • Paid ₹80</p>
+                <h3 className="text-2xl font-display font-black text-white">Contactless QR Pickup</h3>
+                <p className="mt-2 text-xs text-slate-400 leading-relaxed max-w-xs mx-auto">
+                  When you place an order, you receive a dynamic verification token. Show it at the counter for 15-second collection.
+                </p>
+                
+                <div className="mt-6 grid grid-cols-2 gap-3 text-left">
+                  <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800">
+                    <span className="text-[10px] text-slate-500 block uppercase font-semibold">Average Pickup</span>
+                    <strong className="text-sm text-emerald-400 font-bold">&lt; 30 Seconds</strong>
+                  </div>
+                  <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800">
+                    <span className="text-[10px] text-slate-500 block uppercase font-semibold">Queue Bypass</span>
+                    <strong className="text-sm text-orange-400 font-bold">100% Guaranteed</strong>
+                  </div>
+                </div>
               </div>
 
-              <div className="mt-6 p-3 rounded-xl bg-orange-500/10 border border-orange-500/20 text-orange-300 text-xs text-center font-semibold">
-                🔔 "Your food is ready for pickup! Proceed to Counter 2"
+              <div className="mt-6 p-3 rounded-xl bg-slate-950/80 border border-slate-800 text-slate-400 text-xs text-center">
+                ⚡ Orders are pre-assembled by kitchen staff based on your chosen time slot.
               </div>
             </div>
           </div>
