@@ -9,6 +9,7 @@ spring:
   data:
     mongodb:
       uri: ${MONGODB_URI:mongodb://localhost:27017/smart_canteen}
+      database: ${MONGODB_DATABASE:smart_canteen}
       auto-index-creation: true
   jackson:
     date-format: yyyy-MM-dd'T'HH:mm:ss.SSSZ
