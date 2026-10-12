@@ -1,5 +1,5 @@
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
-export const WS_URL = import.meta.env.VITE_WS_URL || '/ws';
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://queuemanagement-1-ub5l.onrender.com/api';
+export const WS_URL = import.meta.env.VITE_WS_URL || 'https://queuemanagement-1-ub5l.onrender.com/ws';
 export const RAZORPAY_KEY_ID = import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_college_canteen_dummy_key';
 export const CANTEEN_NAME = import.meta.env.VITE_CANTEEN_NAME || 'Apex University Central Canteen';
 

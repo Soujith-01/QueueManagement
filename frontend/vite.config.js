@@ -11,12 +11,15 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'http://localhost:8080',
+        target: 'https://queuemanagement-1-ub5l.onrender.com',
         changeOrigin: true,
+        secure: false,
       },
       '/ws': {
-        target: 'http://localhost:8080',
+        target: 'https://queuemanagement-1-ub5l.onrender.com',
         ws: true,
+        changeOrigin: true,
+        secure: false,
       }
     }
   }
